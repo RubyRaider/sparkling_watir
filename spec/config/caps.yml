@@ -8,8 +8,10 @@ android:
   appWaitActivity: com.address.book.MainActivity
   app: https://github.com/address-book/mobile_apps/blob/master/AddressBook.apk?raw=true
 ios:
-  url: http://localhost:4723/wd/hub
   platformName: iOS
-  platformVersion: '16.0'
-  deviceName: iPhone SE (3rd generation)
-  app: MyRNDemoApp.app
+  appium:options:
+    platformVersion: "14.0"
+    deviceName: iPhone 11
+    automationName: XCUITest
+    app: "/Users/apeque01/Desktop/mobile_practice_1/mobile_session_1/MyRNDemoApp.app"
+    autoDismissAlerts: true

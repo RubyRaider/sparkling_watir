@@ -64,7 +64,7 @@ module SparklingWatir
     def center
       {
         x: coordinates[:x] + size.width / 2,
-        y: coordinates[:y] + size[:height] / 2
+        y: coordinates[:y] + size.height / 2
       }
     end
 

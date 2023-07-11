@@ -2,6 +2,7 @@
 
 require 'appium_lib_core'
 require 'watir'
+require_relative './sparkling_watir/screenshot'
 
 module SparklingWatir
   #
@@ -11,18 +12,22 @@ module SparklingWatir
     attr_accessor :driver
 
     def initialize(opts)
-      url = opts[:caps].delete(:url)
-      @driver = Appium::Core::Driver.for(opts).start_driver(server_url: url)
+      url = opts[:caps]
+      @driver = Appium::Core::Driver.for(opts).start_driver(server_url: 'http://localhost:4723/wd/hub')
     end
 
     def quit
-      @driver.quit
+      driver.quit
     end
 
     alias close quit
 
     def element(selector)
       Element.new(driver, selector)
+    end
+
+    def screenshot
+      Screenshot.new self
     end
 
     def method_missing(method_name, *arguments, &block)
