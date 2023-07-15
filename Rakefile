@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
 desc 'Changes the default platform'

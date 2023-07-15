@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'wait/timer'
 
 module SparklingWatir
+  # This module is in charge of handling all the waits
   module Wait
     class TimeoutError < StandardError; end
 
@@ -38,7 +41,7 @@ module SparklingWatir
           result = yield(object)
           return result if result
         end
-         raise TimeoutError, message_for(timeout, object, message)
+        raise TimeoutError, message_for(timeout, object, message)
       end
 
       #
@@ -79,9 +82,10 @@ module SparklingWatir
           end
         end
       end
-    end # self
-  end # Wait
+    end
+  end
 
+  # THis module provides wait utility methods
   module Waitable
     #
     # Waits until the condition is true.
@@ -129,21 +133,18 @@ module SparklingWatir
       proc do
         opt.keys.all? do |key|
           expected = opt[key]
-          actual = if is_a?(Element) && !respond_to?(key)
-                     attribute_value(key)
-                   else
-                     send(key)
-                   end
-          case expected
-          when Regexp
-            expected =~ actual
-          when Numeric
-            expected == actual
-          else
-            expected.to_s == actual
-          end
+          actual = is_a?(Element) && !respond_to?(key) ? attribute_value(key) : send(key)
+          compare_attributes(actual, expected)
         end
       end
     end
-  end # Waitable
-end # SparklingWatir
+
+    def compare_attributes(actual, expected)
+      case expected
+      when Regexp then expected =~ actual
+      when Numeric then expected == actual
+      else expected.to_s == actual
+      end
+    end
+  end
+end

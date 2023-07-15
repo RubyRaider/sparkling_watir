@@ -1,19 +1,37 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe SparklingWatir::Element do
+require 'spec_helper'
+require_relative '../lib/sparkling_watir/element'
+require_relative '../lib/sparkling_watir/wait'
+
+describe 'Wait' do
+  let(:app) { @app }
+
+  def header
+    if app.capabilities[:platform_name] == 'Android'
+      app.element(xpath: '//android.view.ViewGroup[@content-desc="container header"]/android.widget.TextView')
+    else
+      app.element(xpath: '//XCUIElementTypeStaticText[@name="Products"]')
+    end
+  end
+
+  def backpack
+    if app.capabilities[:platform_name] == 'Android'
+      app.element(xpath: '(//android.view.ViewGroup[@content-desc="store item"])[1]/android.view.ViewGroup[1]/android.widget.ImageView')
+    else
+      app.element(accessibility_id: 'Sauce Labs Backpack')
+    end
+  end
+
   describe '#wait_until' do
-    it 'returns element for additional actions' do
-      title = @app.element(accessibility_id: 'Choose An Awesome View')
-      expect(title.wait_until(&:exists?)).to eq title
+    it 'waits until the element is present' do
+      expect(header.wait_until(&:present?).class).to be SparklingWatir::Element
     end
   end
 
   describe '#wait_while' do
-    it 'returns element for additional actions' do
-      title = @app.element(id: 'Choose An Awesome View')
-      menu_option = @app.element(accessibility_id: 'Echo Box').wait_until(&:present?)
-      menu_option.tap
-      expect(title.wait_while(&:exists?)).to be_nil
+    it 'while the element is not present' do
+      expect(backpack.wait_while { |element| !element.present? }).to be_truthy
     end
   end
 end

@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module SparklingWatir
   module Wait
+    # This class provides the time use on waits
     class Timer
       def initialize(timeout: nil)
         @end_time = timeout ? current_time + timeout : nil
@@ -45,6 +48,6 @@ module SparklingWatir
           ::Time.now.to_f
         end
       end
-    end # Timer
-  end # Wait
-end # SparklingWatir
+    end
+  end
+end

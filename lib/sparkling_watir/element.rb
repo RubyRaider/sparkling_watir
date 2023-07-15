@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'gestures'
 require_relative 'wait'
 
@@ -7,7 +8,6 @@ module SparklingWatir
   # This is a element in the native app context
   #
   class Element
-    include Gestures
     include Waitable
 
     def initialize(driver, selector)
@@ -25,6 +25,7 @@ module SparklingWatir
     rescue Watir::Exception::UnknownObjectException
       false
     end
+
     alias exist? exists?
 
     def present?
@@ -33,6 +34,7 @@ module SparklingWatir
     rescue Watir::Exception::UnknownObjectException
       false
     end
+
     alias visible? present?
 
     def enabled?
@@ -43,16 +45,30 @@ module SparklingWatir
     end
 
     def coordinates
+      assert_exists
       @element.location
     end
+
     alias location coordinates
 
     def size
+      assert_exists
       @element.size
     end
 
     def bounds
       { x: coordinates.x + size.width, y: coordinates.y + size.height }
+    end
+
+    def center
+      {
+        x: coordinates[:x] + size.width / 2,
+        y: coordinates[:y] + size.height / 2
+      }
+    end
+
+    def attribute(attribute_name)
+      wd.attribute(attribute_name)
     end
 
     private

@@ -1,0 +1,6 @@
+require:
+  - rubocop-rspec
+  - rubocop-performance
+
+Metrics/BlockLength:
+  Max: 150

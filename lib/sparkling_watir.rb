@@ -1,26 +1,37 @@
+# frozen_string_literal: true
+
 require 'appium_lib_core'
 require 'watir'
+require_relative './sparkling_watir/gestures'
+require_relative './sparkling_watir/logger'
+require_relative './sparkling_watir/screenshot'
 
 module SparklingWatir
   #
-  # For driving a native application or a native app context
+  # For driving a native application
   #
   class App
     attr_accessor :driver
 
+    include Gestures
+
     def initialize(opts)
-      url = opts[:caps].delete(:url)
+      url = opts[:caps]['url']
       @driver = Appium::Core::Driver.for(opts).start_driver(server_url: url)
     end
 
     def quit
-      @driver.quit
+      driver.quit
     end
 
     alias close quit
 
     def element(selector)
       Element.new(driver, selector)
+    end
+
+    def screenshot
+      Screenshot.new self
     end
 
     def method_missing(method_name, *arguments, &block)
