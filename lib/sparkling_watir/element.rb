@@ -8,6 +8,8 @@ module SparklingWatir
   # This is a element in the native app context
   #
   class Element
+    attr_reader :driver
+
     include Waitable
 
     def initialize(driver, selector)
@@ -70,6 +72,16 @@ module SparklingWatir
     def attribute(attribute_name)
       wd.attribute(attribute_name)
     end
+
+    def value
+      if driver.capabilities[:platform_name] == 'Android'
+        attribute('text')
+      else
+        attribute('value')
+      end
+    end
+
+    alias text value
 
     private
 
