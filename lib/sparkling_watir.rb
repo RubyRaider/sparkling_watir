@@ -16,8 +16,8 @@ module SparklingWatir
     include Gestures
 
     def initialize(opts)
-      url = opts[:caps]
-      @driver = Appium::Core::Driver.for(opts).start_driver(server_url: 'http://localhost:4723/wd/hub')
+      url = opts[:caps]['url']
+      @driver = Appium::Core::Driver.for(opts).start_driver(server_url: url)
     end
 
     def quit

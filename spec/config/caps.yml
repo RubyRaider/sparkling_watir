@@ -1,15 +1,17 @@
 ---
-default_platform: ios
+default_platform: android
 android:
-  url: http://localhost:4723/wd/hub
   platformName: Android
-  platformVersion: '8.1'
-  deviceName: Nexus
-  appWaitActivity: com.address.book.MainActivity
-  app: https://github.com/address-book/mobile_apps/blob/master/AddressBook.apk?raw=true
+  appium:options:
+    url: http://localhost:4723/wd/hub
+    platformVersion: '12'
+    automationName: UiAutomator2
+    deviceName: Pixel 3 API 32
+    app: https://github.com/saucelabs/my-demo-app-rn/releases/download/v1.3.0/Android-MyDemoAppRN.1.3.0.build-244.apk
 ios:
   platformName: iOS
   appium:options:
+    url: http://localhost:4723/wd/hub
     platformVersion: "14.0"
     deviceName: iPhone 11
     automationName: XCUITest
