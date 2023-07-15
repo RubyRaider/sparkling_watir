@@ -2,12 +2,13 @@
 
 require 'appium_lib_core'
 require 'watir'
-require_relative './sparkling_watir/screenshot'
 require_relative './sparkling_watir/gestures'
+require_relative './sparkling_watir/logger'
+require_relative './sparkling_watir/screenshot'
 
 module SparklingWatir
   #
-  # For driving a native application or a native app context
+  # For driving a native application
   #
   class App
     attr_accessor :driver

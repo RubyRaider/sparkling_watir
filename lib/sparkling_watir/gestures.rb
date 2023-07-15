@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'appium_lib_core/common/touch_action/touch_actions'
 require 'selenium/webdriver/common/interactions/interactions'
 
 module SparklingWatir
@@ -21,6 +20,7 @@ module SparklingWatir
       tap = action(:touch, 'tap')
       tap.create_pointer_move(duration: 0.1, x: coordinates[:x], y: coordinates[:y], origin: VIEWPORT)
       tap.create_pointer_down(:left)
+      tap.create_pause(opts[:duration] || 0)
       tap.create_pointer_up(:left)
       perform tap
     end
@@ -40,6 +40,10 @@ module SparklingWatir
       double_tap.create_pointer_up(:left)
 
       perform double_tap
+    end
+
+    def long_press(opts = {})
+      tap(duration: opts[:duration] || 0.5, on: opts[:on])
     end
 
     def swipe(opts = {})

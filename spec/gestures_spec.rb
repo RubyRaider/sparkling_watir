@@ -8,12 +8,12 @@ describe 'Gestures' do
   let(:backpack) { app.element(accessibility_id: 'Sauce Labs Backpack').wait_until(&:present?) }
   let(:bike) { app.element(accessibility_id: 'Sauce Labs Bike Light').wait_until(&:present?) }
   let(:shirt) { app.element(accessibility_id: 'Sauce Labs Bolt T-Shirt').wait_until(&:present?) }
-  let(:title) { app.element(accessibility_id: 'Sauce Labs Backpack').wait_until(&:present?) }
+  let(:backpack_price) { app.element(accessibility_id: 'product price').wait_until(&:present?) }
 
   context 'from app' do
     it '#tap' do
       app.tap on: backpack
-      expect(title).to be_present
+      expect(backpack_price).to be_present
     end
 
     it '#double_tap' do
@@ -22,6 +22,11 @@ describe 'Gestures' do
       app.double_tap on: plus_button
       counter = app.element(predicate: 'label == "3"').wait_until(&:present?)
       expect(counter).to be_present
+    end
+
+    it '#long_press' do
+      app.long_press on: backpack
+      expect(backpack_price).to be_present
     end
 
     it '#swipe_down' do
