@@ -17,7 +17,7 @@ module SparklingWatir
     end
 
     def tap(opts = {})
-      coordinates = { x: opts[:x] || center[:x], y: opts[:y] || center[:y] }
+      coordinates = { x: opts[:x] || opts[:on].center[:x], y: opts[:y] || opts[:on].center[:y] }
       tap = action(:touch, 'tap')
       tap.create_pointer_move(duration: 0.1, x: coordinates[:x], y: coordinates[:y], origin: VIEWPORT)
       tap.create_pointer_down(:left)
@@ -29,7 +29,7 @@ module SparklingWatir
 
     def double_tap(opts = {})
       double_tap = action(:touch, 'double_tap')
-      coordinates = { x: opts[:x] || center[:x], y: opts[:y] || center[:y] }
+      coordinates = { x: opts[:x] || opts[:on].center[:x], y: opts[:y] || opts[:on].center[:y] }
       double_tap.create_pointer_move(duration: 0, x: coordinates[:x], y: coordinates[:y], origin: VIEWPORT)
       double_tap.create_pointer_down(:left)
       double_tap.create_pause(0.1)
@@ -43,32 +43,56 @@ module SparklingWatir
     end
 
     def swipe(opts = {})
-      start_coordinates = select_direction(opts[:start_x] || opts[:to].center[:x], opts[:start_y] || opts[:to].center[:y], opts[:direction])
-      end_coordinates = select_direction(opts[:end_x] || opts[:to].center[:x], opts[:end_y] || opts[:to].center[:y], opts[:direction])
-      duration = opts[:duration] || 1
-      execute_swipe(duration, start_coordinates, end_coordinates)
+      coordinates = select_direction(opts[:to], opts[:direction])
+      execute_swipe(coordinates)
     end
 
     private
 
-    def execute_swipe(duration, start_coordinates, end_coordinates)
+    def execute_swipe(coordinates)
       finger = action(:touch, 'swipe')
-      finger.create_pointer_move(duration: duration, x: start_coordinates[:x], y: start_coordinates[:y],
+      finger.create_pointer_move(duration: 0, x: coordinates[:start_coordinates][:x],
+                                 y: coordinates[:start_coordinates][:y],
                                  origin: VIEWPORT)
       finger.create_pointer_down(:left)
-      finger.create_pointer_move(duration: duration, x: end_coordinates[:x], y: end_coordinates[:y],
+      finger.create_pause(0.6)
+      finger.create_pointer_move(duration: 0.6, x: coordinates[:end_coordinates][:x],
+                                 y: coordinates[:end_coordinates][:y],
                                  origin: VIEWPORT)
       finger.create_pointer_up(:left)
+      finger.create_pointer_down(:left)
+
       perform finger
     end
 
-    def select_direction(x, y, direction = nil)
+    def select_direction(element, direction)
       case direction
-      when :down then { x: x, y: y } # For swipe down, decrease y-coordinate
-      when :up then { x: x, y: y  } # For swipe up, increase y-coordinate
-      when :left, :right then { x: x, y: y }
+      when :down
+        start_x = element.center[:x]
+        start_y = @driver.window_size.height * 0.8
+        end_x = element.center[:x]
+        end_y = element.center[:y]
+      when :up
+        start_x = @driver.window_size.width / 2
+        start_y = @driver.window_size.height * 0.2
+        end_x = element.center[:x]
+        end_y = element.center[:y] / 0.5
+      when :left
+        start_x = @driver.window_size.width
+        start_y = element.center[:y]
+        end_x = element.center[:x]
+        end_y = element.center[:y]
+      when :right
+        start_x = @driver.window_size.width
+        start_y = element.center[:y]
+        end_x = element.center[:x]
+        end_y = element.center[:y]
       else raise "You selected an invalid direction. The valid directions are: :down, :up, :left, :right"
       end
+      {
+        start_coordinates: { x: start_x, y: start_y },
+        end_coordinates: { x: end_x, y: end_y }
+      }
     end
   end
 end

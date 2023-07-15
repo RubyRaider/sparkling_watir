@@ -8,7 +8,6 @@ module SparklingWatir
   # This is a element in the native app context
   #
   class Element
-    include Gestures
     include Waitable
 
     def initialize(driver, selector)

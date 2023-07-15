@@ -12,67 +12,37 @@ describe 'Gestures' do
 
   context 'from app' do
     it '#tap' do
-      app.tap(x: backpack.center[:x], y: backpack.center[:y])
+      app.tap on: backpack
       expect(title).to be_present
     end
 
     it '#double_tap' do
-      backpack.tap
+      app.tap on: backpack
       plus_button = app.element(accessibility_id: 'counter plus button').wait_until(&:present?)
-      app.double_tap(x: plus_button.center[:x], y: plus_button.center[:y])
+      app.double_tap on: plus_button
       counter = app.element(predicate: 'label == "3"').wait_until(&:present?)
       expect(counter).to be_present
     end
 
     it '#swipe_down' do
-      app.swipe(start_x: backpack.center[:x],
-                start_y: backpack.center[:y],
-                end_x: shirt.center[:x],
-                end_y: shirt.center[:y], duration: 2, direction: :down)
+      app.swipe to: shirt, direction: :down
+      header = app.element(xpath: '//XCUIElementTypeStaticText[@name="Products"]')
+      expect(header).to_not be_present
     end
 
     it '#swipe_up' do
-      backpack.swipe to: shirt, direction: :down
-      shirt.swipe to: backpack, direction: :up
+      app.swipe to: shirt, direction: :down
+      app.swipe to: backpack, direction: :up
+      header = app.element(xpath: '//XCUIElementTypeStaticText[@name="Products"]')
+      expect(header).to be_present
     end
 
     it '#swipe_right' do
-      backpack.swipe to: bike, direction: :right
+      app.swipe to: bike, direction: :right
     end
 
     it '#swipe_left' do
-      bike.swipe to: backpack, direction: :left
-    end
-  end
-
-  context 'from element' do
-    it '#tap' do
-      backpack.double_tap
-      expect(title).to be_present
-    end
-
-    it '#double_tap' do
-      backpack.tap
-      plus_button = app.element(accessibility_id: 'counter plus button').wait_until(&:present?)
-      plus_button.double_tap
-      counter = app.element(predicate: 'label == "3"').wait_until(&:present?)
-      expect(counter).to be_present
-    end
-
-    it '#swipe_down' do
-      app.swipe(start_x: 108, start_y: 284, end_x: 108, end_y: 584, duration: 2, direction: :down)
-    end
-
-    it '#swipe_up' do
-      backpack.swipe to: shirt, direction: :down
-    end
-
-    it '#swipe_right' do
-      backpack.swipe to: bike, direction: :right
-    end
-
-    it '#swipe_left' do
-      bike.swipe to: backpack, direction: :left
+      app.swipe to: backpack, direction: :left
     end
   end
 end
