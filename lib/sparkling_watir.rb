@@ -31,7 +31,7 @@ module SparklingWatir
     end
 
     def screenshot
-      Screenshot.new self
+      Screenshot.new driver
     end
 
     def method_missing(method_name, *arguments, &block)
