@@ -23,4 +23,10 @@ describe 'Element' do
       expect(attribute.class).to be String
     end
   end
+
+  describe '#text' do
+    it 'returns the text for a specific element' do
+      expect(header.wait_until(&:present?).text).to eql 'Products'
+    end
+  end
 end

@@ -5,10 +5,10 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'sparkling_watir'
-  spec.version       = '0.0.4'
+  spec.version       = '0.0.5'
   spec.authors       = ['Agustin Pequeno']
   spec.email         = ['agustin.pe94@gmail.com']
-
+  spec.homepage = 'https://github.com/aguspe/sparkling_watir'
   spec.summary       = 'A watir adaptation for testing your native mobile apps'
   spec.description   = 'Sparkling watir takes heavy inspiration from tap watir and is a mobile adaptation of watir'
   spec.license       = 'MIT'
