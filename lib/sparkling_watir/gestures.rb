@@ -16,10 +16,10 @@ module SparklingWatir
       @driver.perform_actions actions
     end
 
-    def tap(timeout = nil)
-      wait_until(timeout: timeout, &:present?)
+    def tap(opts = {})
+      coordinates = { x: opts[:x] || center[:x], y: opts[:y] || center[:y] }
       tap = action(:touch, 'tap')
-      tap.create_pointer_move(duration: 0.1, x: center[:x], y: center[:y], origin: VIEWPORT)
+      tap.create_pointer_move(duration: 0.1, x: coordinates[:x], y: coordinates[:y], origin: VIEWPORT)
       tap.create_pointer_down(:left)
       tap.create_pointer_up(:left)
       perform tap
@@ -27,22 +27,24 @@ module SparklingWatir
 
     alias press tap
 
-    def double_tap
-      wait_until(&:present?)
+    def double_tap(opts = {})
       double_tap = action(:touch, 'double_tap')
-      tap.create_pointer_move(duration: 0.1, x: center[:x], y: center[:y], origin: VIEWPORT)
+      coordinates = { x: opts[:x] || center[:x], y: opts[:y] || center[:y] }
+      double_tap.create_pointer_move(duration: 0, x: coordinates[:x], y: coordinates[:y], origin: VIEWPORT)
       double_tap.create_pointer_down(:left)
+      double_tap.create_pause(0.1)
       double_tap.create_pointer_up(:left)
+      double_tap.create_pause(0.1)
       double_tap.create_pointer_down(:left)
+      double_tap.create_pause(0.1)
       double_tap.create_pointer_up(:left)
 
       perform double_tap
     end
 
     def swipe(opts = {})
-      wait_until(&:present?)
-      start_coordinates = self.center
-      end_coordinates = select_direction(opts[:to].wait_until(&:exists?).center[:x], opts[:to].wait_until(&:exists?).center[:y], opts[:direction])
+      start_coordinates = select_direction(opts[:start_x] || opts[:to].center[:x], opts[:start_y] || opts[:to].center[:y], opts[:direction])
+      end_coordinates = select_direction(opts[:end_x] || opts[:to].center[:x], opts[:end_y] || opts[:to].center[:y], opts[:direction])
       duration = opts[:duration] || 1
       execute_swipe(duration, start_coordinates, end_coordinates)
     end
@@ -60,10 +62,10 @@ module SparklingWatir
       perform finger
     end
 
-    def select_direction(x, y, direction)
+    def select_direction(x, y, direction = nil)
       case direction
-      when :down then { x: x, y: - y } # For swipe down, decrease y-coordinate
-      when :up then { x: x, y: y * 20  } # For swipe up, increase y-coordinate
+      when :down then { x: x, y: y } # For swipe down, decrease y-coordinate
+      when :up then { x: x, y: y  } # For swipe up, increase y-coordinate
       when :left, :right then { x: x, y: y }
       else raise "You selected an invalid direction. The valid directions are: :down, :up, :left, :right"
       end

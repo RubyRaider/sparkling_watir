@@ -3,6 +3,7 @@
 require 'appium_lib_core'
 require 'watir'
 require_relative './sparkling_watir/screenshot'
+require_relative './sparkling_watir/gestures'
 
 module SparklingWatir
   #
@@ -10,6 +11,8 @@ module SparklingWatir
   #
   class App
     attr_accessor :driver
+
+    include Gestures
 
     def initialize(opts)
       url = opts[:caps]
