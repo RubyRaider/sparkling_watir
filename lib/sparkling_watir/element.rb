@@ -67,6 +67,10 @@ module SparklingWatir
       }
     end
 
+    def attribute(attribute_name)
+      wd.attribute(attribute_name)
+    end
+
     private
 
     def locate

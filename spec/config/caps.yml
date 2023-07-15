@@ -1,5 +1,5 @@
 ---
-default_platform: android
+default_platform: ios
 android:
   platformName: Android
   appium:options:

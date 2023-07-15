@@ -1,7 +1,7 @@
 require 'base64'
 require 'spec_helper'
 
-describe 'SparklingWatir::Screenshot' do
+describe 'Screenshot' do
   let(:png_header) { "\211PNG".force_encoding('ASCII-8BIT') }
 
   describe '#png' do
