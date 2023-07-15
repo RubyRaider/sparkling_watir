@@ -77,7 +77,7 @@ module SparklingWatir
       if driver.capabilities[:platform_name] == 'Android'
         attribute('text')
       else
-        attribute('name')
+        attribute('label')
       end
     end
 
