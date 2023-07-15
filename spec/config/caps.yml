@@ -15,5 +15,5 @@ ios:
     platformVersion: "14.0"
     deviceName: iPhone 11
     automationName: XCUITest
-    app: "/Users/apeque01/Desktop/mobile_practice_1/mobile_session_1/MyRNDemoApp.app"
+    app: https://github.com/saucelabs/my-demo-app-rn/releases/download/v1.3.0/iOS-Simulator-MyRNDemoApp.1.3.0-162.zip
     autoDismissAlerts: true
