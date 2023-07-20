@@ -47,8 +47,17 @@ module SparklingWatir
     end
 
     def swipe(opts = {})
-      coordinates = select_direction(opts[:to], opts[:direction])
+      coordinates = select_direction(opts[:to], opts[:direction], opts[:scrollable])
       execute_swipe(coordinates)
+    end
+
+    def scroll(opts = {})
+      timeout = Time.now + 30
+      while Time.now < timeout
+        swipe to: opts[:into], direction: opts[:direction], scrollable: true
+        break if opts[:for].present?
+      end
+      opts[:for]
     end
 
     private
@@ -69,34 +78,49 @@ module SparklingWatir
       perform finger
     end
 
-    def select_direction(element, direction)
-      case direction
-      when :down
-        start_x = element.center[:x]
-        start_y = @driver.window_size.height * 0.8
-        end_x = element.center[:x]
-        end_y = element.center[:y]
-      when :up
-        start_x = @driver.window_size.width / 2
-        start_y = @driver.window_size.height * 0.2
-        end_x = element.center[:x]
-        end_y = element.center[:y] / 0.5
-      when :left
-        start_x = @driver.window_size.width
-        start_y = element.center[:y]
-        end_x = element.center[:x]
-        end_y = element.center[:y]
-      when :right
-        start_x = @driver.window_size.width
-        start_y = element.center[:y]
-        end_x = element.center[:x]
-        end_y = element.center[:y]
-      else raise "You selected an invalid direction. The valid directions are: :down, :up, :left, :right"
-      end
+    def select_direction(element, direction, scrollable)
+      start_coordinates, end_coordinates = case direction
+                                           when :down
+                                             select_down(element)
+                                           when :up
+                                             select_up(element, scrollable)
+                                           when :left, :right
+                                             select_horizontal(element)
+                                           else
+                                             raise "You selected an invalid direction. The valid directions are: :down, :up, :left, :right"
+                                           end
+
       {
-        start_coordinates: { x: start_x, y: start_y },
-        end_coordinates: { x: end_x, y: end_y }
+        start_coordinates: { x: start_coordinates[:x], y: start_coordinates[:y] },
+        end_coordinates: { x: end_coordinates[:x], y: end_coordinates[:y] }
       }
+    end
+
+    def select_down(element)
+      start_x = element.center[:x]
+      start_y = @driver.window_size.height * 0.8
+      end_x = element.center[:x]
+      end_y = element.center[:y]
+
+      [{x: start_x, y: start_y}, {x: end_x, y: end_y}]
+    end
+
+    def select_up(element, scrollable)
+      start_x = @driver.window_size.width / 2
+      start_y = @driver.window_size.height * 0.2
+      end_x = element.center[:x]
+      end_y = scrollable ? element.center[:y] : element.center[:y] / 0.5
+
+      [{x: start_x, y: start_y}, {x: end_x, y: end_y}]
+    end
+
+    def select_horizontal(element)
+      start_x = @driver.window_size.width
+      start_y = element.center[:y]
+      end_x = element.center[:x]
+      end_y = element.center[:y]
+
+      [{x: start_x, y: start_y}, {x: end_x, y: end_y}]
     end
   end
 end
