@@ -2,94 +2,66 @@
 
 require_relative 'spec_helper'
 require_relative '../lib/sparkling_watir/gestures'
+require_relative 'pages/home_page'
+require_relative 'pages/pdp_page'
 
 describe 'Gestures' do
   let(:app) { @app }
-  let(:backpack_price) { app.element(accessibility_id: 'product price').wait_until(&:present?) }
+  let(:home_page) { HomePage.new(app) }
+  let(:pdp_page) { PdpPage.new(app) }
+  let(:backpack) { home_page.backpack }
+  let(:counter) { pdp_page.counter }
+  let(:bike) { home_page.bike }
+  let(:header) { home_page.header }
+  let(:onesie) { home_page.onesie }
+  let(:price) { pdp_page.price }
+  let(:plus_button) { pdp_page.plus_button }
+  let(:shirt) { home_page.shirt }
+  let(:scroll_view) { home_page.scroll_view }
 
-  def xpath_for(element)
-    case element
-    when :backpack then item_number = 1; view_group = 1
-    when :bike then item_number = 3; view_group = 1
-    when :shirt then item_number = 2; view_group = 1
-    else raise 'Invalid element'
-    end
-    "(//android.view.ViewGroup[@content-desc=\"store item\"])[#{item_number}]/android.view.ViewGroup[#{view_group}]/android.widget.ImageView"
+  it '#tap' do
+    app.tap on: backpack
+    expect(price).to be_present
   end
 
-  def header
-    if app.capabilities[:platform_name] == 'Android'
-      app.element(xpath: '//android.view.ViewGroup[@content-desc="container header"]/android.widget.TextView')
-         .wait_until(&:present?)
-    else
-      app.element(xpath: '//XCUIElementTypeStaticText[@name="Products"]').wait_until(&:present?)
-    end
+  it '#double_tap' do
+    app.tap on: backpack
+    app.double_tap on: plus_button
+    expect(counter).to be_present
   end
 
-  def plus_button
-    if app.capabilities[:platform_name] == 'Android'
-      app.element(xpath: '//android.view.ViewGroup[@content-desc="counter plus button"]/android.widget.ImageView')
-         .wait_until(&:present?)
-    else
-      app.element(predicate: 'label == "3"').wait_until(&:present?)
-    end
+  it '#long_press' do
+    app.long_press on: backpack
+    expect(price).to be_present
   end
 
-  def counter
-    if app.capabilities[:platform_name] == 'Android'
-      app.element(xpath: '//android.view.ViewGroup[@content-desc="counter amount"]/android.widget.TextView')
-         .wait_until(&:present?)
-    else
-      app.element(predicate: 'label == "3"').wait_until(&:present?)
-    end
+  it '#swipe_down' do
+    app.swipe to: shirt, direction: :down
+    expect(header).to_not be_present
   end
 
-  before(:example) do
-    if app.capabilities[:platform_name] == 'Android'
-      @backpack = app.element(xpath: xpath_for(:backpack)).wait_until(&:present?)
-      @shirt = app.element(xpath: xpath_for(:shirt)).wait_until(&:present?)
-      @bike = app.element(xpath: xpath_for(:bike)).wait_until(&:present?)
-    else
-      @backpack = app.element(accessibility_id: 'Sauce Labs Backpack').wait_until(&:present?)
-      @shirt = app.element(accessibility_id: 'Sauce Labs Bolt T-Shirt').wait_until(&:present?)
-      @bike = app.element(accessibility_id: 'Sauce Labs Bike Light').wait_until(&:present?)
-    end
+  it '#swipe_up' do
+    app.swipe to: shirt, direction: :down
+    app.swipe to: backpack, direction: :up
+    expect(header).to be_present
   end
 
-  context 'from app' do
-    it '#tap' do
-      app.tap on: @backpack
-      expect(backpack_price).to be_present
-    end
+  it '#swipe_right' do
+    app.swipe to: bike, direction: :right
+  end
 
-    it '#double_tap' do
-      app.tap on: @backpack
-      app.double_tap on: plus_button
-      expect(counter).to be_present
-    end
+  it '#swipe_left' do
+    app.swipe to: backpack, direction: :left
+  end
 
-    it '#long_press' do
-      app.long_press on: @backpack
-      expect(backpack_price).to be_present
-    end
+  it '#scroll_down' do
+    app.scroll into: scroll_view, for: onesie, direction: :down
+    expect(header).to_not be_present
+  end
 
-    it '#swipe_down' do
-      app.swipe to: @shirt, direction: :down
-      expect(header).to_not be_present
-    end
-
-    it '#swipe_up' do
-      app.swipe to: @shirt, direction: :down
-      app.swipe to: @backpack, direction: :up
-      expect(header).to be_present
-    end
-
-    it '#swipe_right' do
-      app.swipe to: @bike, direction: :right
-    end
-
-    it '#swipe_left' do
-      app.swipe to: @backpack, direction: :left
-    end
+  it '#scroll_up' do
+    app.scroll into: scroll_view, for: onesie, direction: :down
+    app.scroll into: scroll_view, for: onesie, direction: :up
+    expect(header).to be_present
   end
 end

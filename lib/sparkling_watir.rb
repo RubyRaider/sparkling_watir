@@ -34,6 +34,18 @@ module SparklingWatir
       Screenshot.new driver
     end
 
+    def platform
+      capabilities[:platform_name]
+    end
+
+    def android?
+      platform == 'Android'
+    end
+
+    def ios?
+      platform == 'iOS'
+    end
+
     def method_missing(method_name, *arguments, &block)
       if driver.respond_to? method_name
         driver.send method_name, *arguments, &block
