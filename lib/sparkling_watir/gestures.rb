@@ -52,7 +52,8 @@ module SparklingWatir
     end
 
     def scroll(opts = {})
-      timeout = Time.now + 30
+      duration = opts[:duration] || 30
+      timeout = Time.now + duration
       while Time.now < timeout
         swipe to: opts[:into], direction: opts[:direction], scrollable: true
         break if opts[:for].present?

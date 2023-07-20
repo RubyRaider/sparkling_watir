@@ -72,9 +72,11 @@ app.long_press on: button
 app.swipe to: button, direction: :up
 ```
 
-**Scroll:** Scrolls until it finds an element, you need to pass a scrollable view to scroll into, there are 4 direction available: :up, :down, :left, :right
+**Scroll:** Scrolls until it finds an element, you need to pass a scrollable view to scroll into, there are 4 direction available: :up, :down, :left, :right.
+The default duration is 30 seconds.
+
 ```ruby
-app.scroll into: scrollable_view, for: element, direction: :down
+app.scroll into: scrollable_view, for: element, direction: :down, duration: 40
 ```
 
 
