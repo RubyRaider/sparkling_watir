@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'sparkling_watir'
-  spec.version       = '0.0.8'
+  spec.version       = '0.0.9'
   spec.authors       = ['Agustin Pequeno']
   spec.email         = ['agustin.pe94@gmail.com']
   spec.homepage = 'https://github.com/aguspe/sparkling_watir'
