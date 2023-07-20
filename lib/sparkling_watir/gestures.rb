@@ -57,7 +57,6 @@ module SparklingWatir
         swipe to: opts[:into], direction: opts[:direction], scrollable: true
         break if opts[:for].present?
       end
-      opts[:for]
     end
 
     private
