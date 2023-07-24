@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sparkling_watir (0.1.0)
+    sparkling_watir (0.1.1)
       appium_lib_core (~> 7.0.0)
       watir (~> 7.1.0)
 
