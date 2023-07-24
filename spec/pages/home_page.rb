@@ -34,19 +34,32 @@ class HomePage < BasePage
   end
 
   def scroll_view
-    if app.android? == 'Android'
-      app.element(xpath: '//android.view.ViewGroup[@content-desc="products screen"]/android.widget.ScrollView').wait_until(&:present?)
+    if app.android?
+      app.element(xpath: '//android.view.ViewGroup[@content-desc="products screen"]/android.widget.ScrollView')
+         .wait_until(&:present?)
     else
-      app.element(xpath: '(//XCUIElementTypeOther[@name="Products Sauce Labs Backpack $29.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Bike Light $9.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Bolt T-Shirt $15.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Fleece Jacket $49.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Onesie $7.99 󰓏 󰓏 󰓏 󰓏 󰓏 Test.allTheThings() T-Shirt $15.99 󰓏 󰓏 󰓏 󰓏 󰓏 © 2023 Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy. Vertical scroll bar, 2 pages Horizontal scroll bar, 1 page"])[14]/XCUIElementTypeScrollView')
+      app.element(
+        xpath: '(//XCUIElementTypeOther[@name="Products Sauce Labs Backpack $29.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Bike Light $9.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Bolt T-Shirt $15.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Fleece Jacket $49.99 󰓏 󰓏 󰓏 󰓏 󰓏 Sauce Labs Onesie $7.99 󰓏 󰓏 󰓏 󰓏 󰓏 Test.allTheThings() T-Shirt $15.99 󰓏 󰓏 󰓏 󰓏 󰓏 © 2023 Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy. Vertical scroll bar, 2 pages Horizontal scroll bar, 1 page"])[14]/XCUIElementTypeScrollView'
+      )
          .wait_until(&:present?)
     end
   end
 
   def onesie
-    if app.android? == 'Android'
-      app.element(xpath: '(//android.view.ViewGroup[@content-desc="store item"])[3]/android.view.ViewGroup[1]/android.widget.ImageView').wait_until(&:present?)
+    if app.android?
+      app.element(
+        xpath: '(//android.view.ViewGroup[@content-desc="store item"])[3]/android.view.ViewGroup[1]/android.widget.ImageView'
+      ).wait_until(&:present?)
     else
       app.element(accessibility_id: 'Sauce Labs Onesie').wait_until(&:present?)
+    end
+  end
+
+  def review_star
+    if app.android?
+      app.elements(xpath: '(//android.view.ViewGroup[@content-desc="review star 1"])[1]/android.widget.TextView')
+    else
+      app.elements(xpath: '(//XCUIElementTypeOther[@name="review star 1"])[2]')
     end
   end
 
