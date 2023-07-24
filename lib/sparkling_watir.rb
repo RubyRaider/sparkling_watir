@@ -30,6 +30,10 @@ module SparklingWatir
       Element.new(driver, selector)
     end
 
+    def elements(selector)
+      ElementCollection.new(driver, selector)
+    end
+
     def screenshot
       Screenshot.new driver
     end

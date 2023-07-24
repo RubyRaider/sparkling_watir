@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'gestures'
 require_relative 'wait'
 
 module SparklingWatir
@@ -8,17 +7,19 @@ module SparklingWatir
   # This is a element in the native app context
   #
   class Element
-    attr_reader :driver
+    attr_reader :driver, :selector
+    attr_accessor :element
 
     include Waitable
 
-    def initialize(driver, selector)
+    def initialize(driver = nil, selector = nil, element = nil)
       @driver = driver
       @selector = selector
+      @element = element
     end
 
     def wd
-      @element || locate
+      element || locate
     end
 
     def exists?
@@ -32,7 +33,7 @@ module SparklingWatir
 
     def present?
       assert_exists
-      @element.displayed?
+      element&.displayed?
     rescue Watir::Exception::UnknownObjectException
       false
     end
@@ -41,21 +42,21 @@ module SparklingWatir
 
     def enabled?
       assert_exists
-      @element.enabled?
+      element&.enabled?
     rescue Watir::Exception::UnknownObjectException
       false
     end
 
     def coordinates
       assert_exists
-      @element.location
+      element&.location
     end
 
     alias location coordinates
 
     def size
       assert_exists
-      @element.size
+      element&.size
     end
 
     def bounds
@@ -84,16 +85,15 @@ module SparklingWatir
     private
 
     def locate
-      @element = @driver.find_element(@selector.keys.first, @selector.values.first)
+      @element ||= driver&.find_element(selector)
     rescue Selenium::WebDriver::Error::NoSuchElementError
       nil
     end
 
     def assert_exists
-      locate unless @element
-      return if @element
+      locate unless element
 
-      raise Watir::Exception::UnknownObjectException
+      raise Watir::Exception::UnknownObjectException unless element
     end
   end
 end
